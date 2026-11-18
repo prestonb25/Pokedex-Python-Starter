@@ -1,22 +1,54 @@
 import json
-## Open the JSON file of pokemon data
-pokedex = open("./pokedex.json", encoding="utf8")
-## create variable "data" that represents the enitre pokedex list
-data = json.load(pokedex)
-print(data[0])
 
-# Create a function that will take the data from the JSON file and you will iterate through the list of pokemon and print each pokemons name.
-
-# Add a language choice feature and print the pokemons name based on the user input
-
-# Develop a function that creates a new list of pokemon based on the type the user searched for. If no pokemon was found of that type inform the user
-
-#Develop a function to find all pokemon matching the name the user searched for. Ex. if "Char" return Charmander, Charmeleon and Charizard. Make the user aware if no pokemon was found. 
+with open("./pokedex.json", encoding="utf8") as file:
+	data = json.load(file)
+with open("./moves.json", encoding="utf8") as file:
+	moves = json.load(file)
 
 
-#Based on user input, show all moves that a pokemon could learn based on their type. For example, if Charizard is fire/fyling, show all fire and flying moves. HINT import the moves.json file too!
+def name_of(pokemon, language="english"):
+	name = pokemon["name"]
+	return name.get(language, name.get("english", "Unknown")) if isinstance(name, dict) else name
 
-import json
-pokedex = open("./pokedex.json", encoding="utf8")
-data = json.load(pokedex)
-moves=open("./moves.")
+
+def list_pokemon(language):
+	for pokemon in data:
+		print(name_of(pokemon, language))
+
+
+def find_type(kind):
+	return search(lambda p: kind.lower() in [t.lower() for t in p.get("type", [])])
+
+
+def find_name(query):
+	return search(lambda p: query.lower() in name_of(p).lower())
+
+
+def search(matches):
+	found = [p for p in data if matches(p)]
+	print(*(name_of(p) for p in found), sep="\n") if found else print("No Pokemon found.")
+	return found
+
+
+def show_moves(query):
+	pokemon = next((p for p in data if query.lower() in name_of(p).lower()), None)
+	if not pokemon:
+		print("No Pokemon found.")
+		return
+	types = {t.lower() for t in pokemon.get("type", [])}
+	records = moves.values() if isinstance(moves, dict) else moves
+	found = [m for m in records if str(m.get("type", "")).lower() in types]
+	print(*(m.get("name", m.get("ename", "Unknown")) for m in found), sep="\n")
+
+
+choice = input("1: list by language, 2: search type, 3: search name, 4: moves: ")
+if choice == "1":
+	list_pokemon(input("Language (english/japanese/chinese/french): ").lower())
+elif choice == "2":
+	find_type(input("Pokemon type: "))
+elif choice == "3":
+	find_name(input("Pokemon name: "))
+elif choice == "4":
+	show_moves(input("Pokemon name: "))
+
+
