@@ -13,6 +13,9 @@ def name_of(pokemon, language="english"):
 
 def list_pokemon(language):
 	print("Progress: ", end="", flush=True)
+	print("Loading Pokédex...")
+	print("Loading moves...")
+	print("Preparing Pokémon names...")
 	for pokemon in data:
 		print(name_of(pokemon, language))
 		print(".", end="", flush=True)
