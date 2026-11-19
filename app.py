@@ -12,7 +12,10 @@ def name_of(pokemon, language="english"):
 
 
 def list_pokemon(language):
+	print("Progress: ", end="", flush=True)
 	for pokemon in data:
 		print(name_of(pokemon, language))
+		print(".", end="", flush=True)
+	print(" complete")
 
 
