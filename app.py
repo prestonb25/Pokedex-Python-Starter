@@ -21,4 +21,6 @@ def list_pokemon(language):
 		print(".", end="", flush=True)
 	print(" complete")
 
-
+x=5
+while x>5:
+	print(100000)
